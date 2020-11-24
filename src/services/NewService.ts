@@ -1,4 +1,4 @@
-import { Service } from "@circle-decorators";
+import { Service } from "../../lib";
 
 @Service()
 export class NewService {

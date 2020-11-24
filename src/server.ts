@@ -2,14 +2,20 @@ import express from "express";
 import { HelloController } from "./controllers/HelloController";
 import bodyParser from "body-parser";
 import { BuildAPI } from "../lib";
-import { createConnection } from "typeorm";
 import { seedDatabase } from "./utils/databaseSeed";
+import { connect } from "mongoose";
 
 async function main() {
   try {
-    console.info("Server is starting ...");
-    await createConnection();
-    console.info("Database is connected ...");
+    console.info("Connecting to database...");
+    const conn = connect("mongodb://localhost/circle-fullstack", {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useCreateIndex: true,
+    });
+    await (await conn).connection.db.dropDatabase();
+
+    console.info("Seeding database ...");
     await seedDatabase();
 
     const app = express();
