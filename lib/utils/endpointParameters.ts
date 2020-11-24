@@ -6,7 +6,6 @@ import {
   PARAMS_METADATA_KEY,
   QUERY_METADATA_KEY,
 } from "../metadatas/symbols";
-import { MiddlewareFunction } from "../types/MiddlewareType";
 import { RouteMetadataType } from "../types/RouteMetadataType";
 
 export function endpointParameters(
@@ -14,8 +13,9 @@ export function endpointParameters(
   route: RouteMetadataType
 ) {
   const endPoint: Function = controller.prototype[route.key].bind(
-    Container.get(controller) // inject services to the controller
+    Container.get(controller)
   );
+
   const queryParameters: Array<{ queryParameter: string; index: number }> =
     Reflect.getOwnMetadata(QUERY_METADATA_KEY, controller, route.key) || [];
   const bodyParameters: Array<{ index: number }> =
@@ -25,10 +25,7 @@ export function endpointParameters(
   const ctxParameters: Array<{ index: number }> =
     Reflect.getOwnMetadata(CTX_METADATA_KEY, controller, route.key) || [];
 
-  const endPointOverride: MiddlewareFunction = async function (
-    req: Request,
-    res: Response
-  ) {
+  return async function (req: Request, res: Response) {
     const args: any[] = [];
 
     queryParameters.forEach((query) => {
@@ -48,7 +45,7 @@ export function endpointParameters(
     });
 
     const test = await endPoint(...args);
-    res.send(test);
+    res.json(test);
   };
-  return endPointOverride;
+  // return endPointOverride;
 }

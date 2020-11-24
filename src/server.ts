@@ -1,19 +1,19 @@
 import express from "express";
-import { HelloController } from "./controllers/HelloController";
 import bodyParser from "body-parser";
 import { BuildAPI } from "../lib";
 import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
+import { FamillyController } from "./controllers/FamillyController";
 
 async function main() {
   try {
     console.info("Connecting to database...");
-    const conn = connect("mongodb://localhost/circle-fullstack", {
+    const conn = await connect("mongodb://localhost/circle-fullstack", {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,
     });
-    await (await conn).connection.db.dropDatabase();
+    await conn.connection.db.dropDatabase();
 
     console.info("Seeding database ...");
     await seedDatabase();
@@ -24,10 +24,7 @@ async function main() {
     app.use(bodyParser.urlencoded({ extended: false }));
 
     const { router } = BuildAPI({
-      controllers: [HelloController],
-      auth: () => {
-        return true;
-      },
+      controllers: [FamillyController],
     });
 
     app.use(router);

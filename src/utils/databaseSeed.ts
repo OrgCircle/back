@@ -2,6 +2,7 @@ import Familly from "../entity/Familly";
 import Profile from "../entity/Profile";
 import { Types } from "mongoose";
 export async function seedDatabase() {
+  // Create familly
   const familly = new Familly({
     _id: new Types.ObjectId(),
     name: "DOE",
@@ -9,19 +10,16 @@ export async function seedDatabase() {
     password: "passwordToPut",
   });
 
-  const savedFamilly = await familly.save();
-
   const defaultProfile = new Profile({
     _id: new Types.ObjectId(),
     name: "John",
     photoUrl: "path",
     password: "shityPassword",
-    familly: savedFamilly,
+    familly: familly,
   });
 
-  await defaultProfile.save();
-  await savedFamilly.updateOne({ profiles: [defaultProfile] });
+  familly.profiles = [defaultProfile];
 
-  const famillyFound = await Familly.findOne().populate("profiles");
-  console.log(famillyFound);
+  await familly.save();
+  await defaultProfile.save();
 }
