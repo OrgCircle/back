@@ -20,7 +20,7 @@ export async function seedDatabase() {
   });
 
   await defaultProfile.save();
-  await savedFamilly.update({ profiles: [defaultProfile] });
+  await savedFamilly.updateOne({ profiles: [defaultProfile] });
 
   const famillyFound = await Familly.findOne().populate("profiles");
   console.log(famillyFound);
