@@ -109,7 +109,7 @@ export class HelloController {
 }
 ```
 
-## Context
+## Context
 
 ```typescript
 @Controller("/hello")
