@@ -38,7 +38,10 @@ export const generateRoutes = (
     if (authorized && !options.auth)
       throw new Error("Authorized function not provided");
 
-    const authorizedMiddleware: MiddlewareFunction = AuthorizedFunction();
+    const authorizedMiddleware: MiddlewareFunction = AuthorizedFunction(
+      authorized,
+      options
+    );
 
     const middlewares: MiddlewareFunction[] =
       Reflect.getOwnMetadata(MIDDLEWARE_METADATA_KEY, controller, route.key) ||
