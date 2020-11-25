@@ -19,10 +19,12 @@ export class FamillyService {
       name: "Admin",
       familly: createFamilly,
     });
-
     createFamilly.profiles = [defaultProfile];
-
     await defaultProfile.save();
     return await createFamilly.save();
+  }
+
+  async deleteFamillyById(id: string): Promise<IFamilly> {
+    return await Familly.findOneAndDelete({ _id: id }).exec();
   }
 }

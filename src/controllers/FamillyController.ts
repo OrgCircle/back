@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "../../lib";
-import { FamillyInput } from "../entity/Familly";
+import { FamillyInput, FamillyObject } from "../entity/Familly";
 import { FamillyService } from "../services/FamillyService";
 
 @Controller("/familly")
@@ -26,13 +26,14 @@ export class FamillyController {
     return createFamilly;
   }
 
-  @Put("/:id")
-  putFamilly(@Body body: any) {
+  @Put("/:id", { description: "Edit the familly matching the id" })
+  putFamilly(@Body body: FamillyInput) {
     return { ...body };
   }
 
-  @Delete("/:id")
+  @Delete("/:id", { description: "Delete the familly matching the id" })
   async deleteFamilly(@Param("id") id: string) {
-    return { id };
+    const familly = await this.famillyService.deleteFamillyById(id);
+    return familly;
   }
 }
