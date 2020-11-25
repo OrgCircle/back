@@ -1,5 +1,6 @@
 import { Service } from "../../lib";
-import Familly, { IFamilly } from "../entity/Familly";
+import Familly, { FamillyInput, IFamilly } from "../entity/Familly";
+import Profile from "../entity/Profile";
 
 @Service()
 export class FamillyService {
@@ -9,5 +10,19 @@ export class FamillyService {
 
   getFamillyById(id: string): Promise<IFamilly> {
     return Familly.findById(id).exec();
+  }
+
+  async createFamilly(familly: FamillyInput): Promise<IFamilly> {
+    const createFamilly = new Familly(familly);
+
+    const defaultProfile = new Profile({
+      name: "Admin",
+      familly: createFamilly,
+    });
+
+    createFamilly.profiles = [defaultProfile];
+
+    await defaultProfile.save();
+    return await createFamilly.save();
   }
 }
