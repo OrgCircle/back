@@ -7,10 +7,10 @@ export function AuthorizedFunction(
 ): MiddlewareFunction {
   return (req, res, next) => {
     if (authorized === undefined || options.auth === undefined) return next();
-    if (!options.auth(authorized, { req, res })) {
-      res.status(403).send({ message: "Operation not authorized" });
-    } else {
+    if (options.auth(authorized, { req, res })) {
       return next();
+    } else {
+      res.status(403).send({ message: "Operation not authorized" });
     }
   };
 }

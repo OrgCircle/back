@@ -10,7 +10,6 @@ export interface IFamilly extends Document {
 
 const FamillySchema: Schema = new Schema<IFamilly>(
   {
-    _id: Schema.Types.ObjectId,
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },

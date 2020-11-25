@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AUTHORIZED_METADATA_KEY } from "../metadatas/symbols";
+import { getAPIMetadataStorage } from "../metadatas/metadataStorage";
 
 export type AuthorizedFunction = (
   roles: string[] | null,
@@ -10,11 +10,9 @@ export const Authorized = (
   roles: string[] | string = null
 ): MethodDecorator => {
   return (target, key) => {
-    Reflect.defineMetadata(
-      AUTHORIZED_METADATA_KEY,
-      typeof roles === "string" ? [roles] : roles,
-      target.constructor,
-      key
-    );
+    getAPIMetadataStorage().addAuthHandler(roles, {
+      target: target.constructor,
+      key,
+    });
   };
 };

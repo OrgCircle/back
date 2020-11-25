@@ -1,51 +1,50 @@
 import { Request, Response } from "express";
 import Container from "typedi";
-import {
-  BODY_METADATA_KEY,
-  CTX_METADATA_KEY,
-  PARAMS_METADATA_KEY,
-  QUERY_METADATA_KEY,
-} from "../metadatas/symbols";
-import { RouteMetadataType } from "../types/RouteMetadataType";
+import { Route } from "../metadatas/metadatasTypes";
+
+import { MiddlewareFunction } from "../types/MiddlewareType";
+
+type Parameters = Pick<
+  Route,
+  "bodyParam" | "queryURLParam" | "paramsURLParam" | "contextParam"
+>;
 
 export function endpointParameters(
-  controller: Function,
-  route: RouteMetadataType
+  { bodyParam, contextParam, paramsURLParam, queryURLParam }: Parameters,
+  route: Route
 ) {
-  const endPoint: Function = controller.prototype[route.key].bind(
-    Container.get(controller)
+  const endPoint: Function = route.target.prototype[route.key].bind(
+    Container.get(route.target) // inject services to the controller
   );
 
-  const queryParameters: Array<{ queryParameter: string; index: number }> =
-    Reflect.getOwnMetadata(QUERY_METADATA_KEY, controller, route.key) || [];
-  const bodyParameters: Array<{ index: number }> =
-    Reflect.getOwnMetadata(BODY_METADATA_KEY, controller, route.key) || [];
-  const paramsParameters: Array<{ paramName: string; index: number }> =
-    Reflect.getOwnMetadata(PARAMS_METADATA_KEY, controller, route.key) || [];
-  const ctxParameters: Array<{ index: number }> =
-    Reflect.getOwnMetadata(CTX_METADATA_KEY, controller, route.key) || [];
-
-  return async function (req: Request, res: Response) {
+  const endPointOverride: MiddlewareFunction = async function (
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     const args: any[] = [];
 
-    queryParameters.forEach((query) => {
-      args[query.index] = req.query[query.queryParameter];
+    queryURLParam?.forEach((query) => {
+      args[query.index] = req.query[query.paramName];
     });
 
-    bodyParameters.forEach((query) => {
+    bodyParam?.forEach((query) => {
       args[query.index] = req.body;
     });
 
-    paramsParameters.forEach((query) => {
+    paramsURLParam?.forEach((query) => {
       args[query.index] = req.params[query.paramName];
     });
 
-    ctxParameters.forEach((query) => {
+    contextParam?.forEach((query) => {
       args[query.index] = { req, res };
     });
 
-    const test = await endPoint(...args);
-    res.json(test);
+    try {
+      const endpointReturnValue = await endPoint(...args);
+      return res.json(endpointReturnValue);
+    } catch (error) {
+      res.send(500).json({ message: "Server internal error" });
+    }
   };
-  // return endPointOverride;
+  return endPointOverride;
 }

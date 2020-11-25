@@ -8,12 +8,13 @@ export class FamillyController {
   @Get("/")
   async getFamillies() {
     const allFamilies = await this.famillyService.getAllFamillies();
-    return { allFamilies };
+    return allFamilies;
   }
 
   @Get("/:id")
   async getFamilly(@Param("id") id: string) {
-    return { id };
+    const familly = await this.famillyService.getFamillyById(id);
+    return familly;
   }
 
   @Post("/")

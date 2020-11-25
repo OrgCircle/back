@@ -9,7 +9,6 @@ export interface IProfile extends Document {
 }
 
 const ProfileSchema: Schema = new Schema<IProfile>({
-  _id: Schema.Types.ObjectId,
   name: { type: String, required: true },
   photoUrl: { type: String, required: true },
   password: { type: String, required: true },

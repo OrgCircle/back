@@ -1,18 +1,15 @@
 import "reflect-metadata";
-import { CONTROLLER_METADATA_KEY } from "../metadatas/symbols";
-import { getControllerRoutes } from "../utils/routeUtils";
-import { ControllerMetadataType } from "../types/ControllerMetadataType";
+import { getAPIMetadataStorage } from "../metadatas/metadataStorage";
 
-// interface ControllerOptions {}
-
-export const Controller = (controllerUrl: string): ClassDecorator => {
+export const Controller = (baseUrl: string): ClassDecorator => {
   return (target) => {
-    const routes = getControllerRoutes(target);
-
-    const controllerObject: ControllerMetadataType = {
-      controllerUrl,
-      ...routes,
-    };
-    Reflect.defineMetadata(CONTROLLER_METADATA_KEY, controllerObject, target);
+    const apiStorage = getAPIMetadataStorage();
+    const routes =
+      apiStorage.routes.filter((route) => route.target === target) || [];
+    apiStorage.controllers.push({
+      baseUrl,
+      target,
+      routes,
+    });
   };
 };

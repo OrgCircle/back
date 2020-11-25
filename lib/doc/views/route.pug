@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+html(lang="fr")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		title=`Route ${route.path}`
+		style 
+			include ../styles/out.css
+	body(class="font-sans antialiased space-y-4 text-gray-800")
+		header(class="p-3 bg-blue-400 shadow-md")
+			span(class="text-xl font-semibold")=`${route.target.name} ${route.path}`
+
+		div(class="container mx-auto space-y-4 bg-gray-100 flex rounded-md flex-col p-5")
+			div(class="text-xl font-semibold")=`Route endpoint : ${route.path}`
+
+			if route.inputs
+				div Body parameters :
+				table(class="table-auto border-collapse")
+					thead
+						tr
+							th(class="border border-gray-400 p-2") Name
+							th(class="border border-gray-400 p-2") Type
+							th(class="border border-gray-400 p-2") Nullable
+							th(class="border border-gray-400 p-2") description
+					tbody
+						each input in route.inputs
+							tr
+								td(class="border border-gray-400 p-2")=input.name
+								td(class="border border-gray-400 p-2")
+									if input.type === "String" ||input.type === "Number" ||input.type === "Boolean" ||input.type === "Date"
+										span=input.type
+									else
+										a(href=`${docUrl}/type/${input.type}` class="text-blue-500 underline")=input.type
+								td(class="border border-gray-400 p-2")=input.nullable
+								td(class="border border-gray-400 p-2")=input.description
+
+
+			if route.responseFields
+				div Response :
+				table(class="table-auto border-collapse")
+					thead
+						tr
+							th(class="border border-gray-400 p-2") Name
+							th(class="border border-gray-400 p-2") Type
+							th(class="border border-gray-400 p-2") Nullable
+							th(class="border border-gray-400 p-2") description
+					tbody
+						each field in route.responseFields
+							tr
+								td(class="border border-gray-400 p-2")=field.name
+								td(class="border border-gray-400 p-2")
+									if field.type === "String" || field.type === "Number" || field.type === "Boolean" || field.type === "Date"
+										span=field.type
+									else
+										a(href=`${docUrl}/type/${field.type}` class="text-blue-500 underline")=field.type
+								td(class="border border-gray-400 p-2")=field.nullable
+								td(class="border border-gray-400 p-2")=field.description
+
+
+

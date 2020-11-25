@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+html(lang="fr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Api Documentation
+    style 
+      include ../styles/out.css
+  body(class="font-sans antialiased space-y-4 text-gray-800")
+    header(class="p-3 bg-blue-400 shadow-md")
+      span(class="text-xl") Documentation de l'api
+
+    div(class="container mx-auto space-y-4 flex flex-col")
+      each controller in controllers
+        a(href=`${docUrl}/controller/${controller.target.name}` class="px-5 py-3 text-lg border-gray-600 bg-gray-100 rounded-md flex-1 flex shadow-md")
+          span(class="flex-1 text-2xl my-auto")=controller.target.name
+          span(class="w-32 p-2 rounded-md font-bold leading-none")=controller.baseUrl
+

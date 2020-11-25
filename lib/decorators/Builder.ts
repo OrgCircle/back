@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { CONTROLLER_METADATA_KEY } from "../metadatas/symbols";
-import { ControllerMetadataType } from "../types/ControllerMetadataType";
-import { generateControllerDoc } from "../utils/controllerDoc";
+import { generateApiDoc } from "../doc/apiDoc";
 import { generateRoutes } from "../utils/routeUtils";
 import { AuthorizedFunction } from "./Autorized";
 
@@ -9,8 +7,7 @@ export interface BuildApiOptions {
   baseUrl?: string;
   generateDocs?: boolean;
   docsUrl?: string;
-  controllers?: Array<Function>;
-  globalMiddleware?: Array<any>;
+  controllers: Array<Function>;
   auth?: AuthorizedFunction;
 }
 
@@ -24,22 +21,13 @@ export const BuildAPI = (options: BuildApiOptions): BuildApiObject => {
   //Define default values
   options.baseUrl = options.baseUrl ?? "/api";
   options.generateDocs = options.generateDocs ?? true;
+  options.docsUrl = options.docsUrl ?? "/api/doc";
 
-  options.controllers.forEach((controller) => {
-    const controllerMeta: ControllerMetadataType = Reflect.getOwnMetadata(
-      CONTROLLER_METADATA_KEY,
-      controller
-    );
+  generateRoutes(router, options);
 
-    generateRoutes(controllerMeta, controller, router, options);
-
-    if (options.generateDocs) {
-      generateControllerDoc(
-        { controllerMeta, controller },
-        { router, ...options }
-      );
-    }
-  });
+  if (options.generateDocs) {
+    generateApiDoc(router, options.docsUrl);
+  }
 
   return { router };
 };
