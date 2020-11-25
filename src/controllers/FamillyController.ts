@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "../../lib";
-import { FamillyInput, FamillyObject } from "../entity/Familly";
+import { FamillyInput } from "../entity/Familly";
 import { FamillyService } from "../services/FamillyService";
 
 @Controller("/familly")
