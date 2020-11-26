@@ -43,7 +43,8 @@ export function endpointParameters(
       const endpointReturnValue = await endPoint(...args);
       return res.json(endpointReturnValue);
     } catch (error) {
-      res.send(500).json({ message: "Server internal error" });
+      console.error(error);
+      res.status(500).json({ message: "Server internal error" });
     }
   };
   return endPointOverride;

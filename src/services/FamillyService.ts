@@ -1,6 +1,6 @@
 import { Service } from "../../lib";
 import Familly, { FamillyInput, IFamilly } from "../entity/Familly";
-import Profile from "../entity/Profile";
+import { hash } from "bcryptjs";
 
 @Service()
 export class FamillyService {
@@ -12,19 +12,34 @@ export class FamillyService {
     return Familly.findById(id).exec();
   }
 
-  async createFamilly(familly: FamillyInput): Promise<IFamilly> {
-    const createFamilly = new Familly(familly);
+  async createFamilly(famillyInput: FamillyInput): Promise<IFamilly> {
+    try {
+      famillyInput.password = await this.hashPassword(famillyInput.password);
+      const familly = new Familly({
+        ...famillyInput,
+        profiles: [{ name: "Profile 1" }],
+      });
 
-    const defaultProfile = new Profile({
-      name: "Admin",
-      familly: createFamilly,
-    });
-    createFamilly.profiles = [defaultProfile];
-    await defaultProfile.save();
-    return await createFamilly.save();
+      return await familly.save();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Familly creation failed");
+    }
   }
 
   async deleteFamillyById(id: string): Promise<IFamilly> {
     return await Familly.findOneAndDelete({ _id: id }).exec();
+  }
+
+  async updateFamillyById(id: string, familly: Partial<IFamilly>) {
+    familly.password = await this.hashPassword(familly.password);
+    return await Familly.findOneAndUpdate({ _id: id }, familly, {
+      new: true,
+    });
+  }
+
+  private async hashPassword(pass: string): Promise<string | null> {
+    if (!pass) return null;
+    return await hash(pass, 4);
   }
 }

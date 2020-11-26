@@ -12,6 +12,7 @@ async function main() {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     });
     await conn.connection.db.dropDatabase();
 

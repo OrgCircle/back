@@ -8,27 +8,39 @@ export class FamillyController {
 
   @Get("/", { description: "Return all families in database" })
   async getFamillies() {
-    const allFamilies = await this.famillyService.getAllFamillies();
-    return allFamilies;
+    return await this.famillyService.getAllFamillies();
   }
 
   @Get("/:id", { description: "Return the familly matching the id" })
   async getFamilly(@Param("id") id: string) {
-    const familly = await this.famillyService.getFamillyById(id);
-    return familly;
+    return await this.famillyService.getFamillyById(id);
   }
 
   @Post("/", { description: "Create a familly" })
-  async postFamilly(@Body familly: FamillyInput) {
-    const createFamilly = await this.famillyService.createFamilly(familly);
-    console.log(createFamilly);
+  async postFamilly(@Body { email, name, password }: FamillyInput) {
+    const insertedFamilly = await this.famillyService.createFamilly({
+      email,
+      name,
+      password,
+    });
 
-    return createFamilly;
+    insertedFamilly.password = undefined;
+    return insertedFamilly;
   }
 
   @Put("/:id", { description: "Edit the familly matching the id" })
-  putFamilly(@Body body: FamillyInput) {
-    return { ...body };
+  async putFamilly(
+    @Param("id") id: string,
+    @Body { email, name, password }: FamillyInput
+  ) {
+    const updatedFamilly = await this.famillyService.updateFamillyById(id, {
+      email,
+      name,
+      password,
+    });
+
+    updatedFamilly.password = undefined;
+    return updatedFamilly;
   }
 
   @Delete("/:id", { description: "Delete the familly matching the id" })

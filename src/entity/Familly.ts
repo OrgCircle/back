@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import { Field, ObjectType } from "../../lib";
 import { Input } from "../../lib/decorators/Input";
-import { IProfile } from "./Profile";
+import { IProfile, ProfileSchema } from "./Profile";
 
 export interface IFamilly extends Document {
   name: string;
@@ -15,7 +15,7 @@ const FamillySchema: Schema = new Schema<IFamilly>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    profiles: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
+    profiles: [ProfileSchema],
   },
   { timestamps: true }
 );

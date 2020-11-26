@@ -12,4 +12,6 @@ export * from "./decorators/Context";
 export * from "./decorators/Param";
 export * from "./decorators/Query";
 
+export * from "./types/MiddlewareType";
+
 export { Service } from "typedi";

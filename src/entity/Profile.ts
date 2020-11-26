@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { Schema, Document } from "mongoose";
 import { Field, ObjectType } from "../../lib";
 import { Input } from "../../lib/decorators/Input";
 import { IFamilly } from "./Familly";
@@ -10,11 +10,10 @@ export interface IProfile extends Document {
   familly: IFamilly;
 }
 
-const ProfileSchema: Schema = new Schema<IProfile>({
+export const ProfileSchema: Schema = new Schema<IProfile>({
   name: { type: String, required: true },
   photoUrl: { type: String, required: false },
   password: { type: String, required: false },
-  familly: { type: Schema.Types.ObjectId, ref: "Familly" },
 });
 
 @Input
@@ -27,8 +26,6 @@ export class ProfileInput implements Partial<IProfile> {
 
   @Field({ description: "Password of the familly account", nullable: true })
   password?: string;
-
-  familly: IFamilly;
 }
 
 @ObjectType
@@ -44,9 +41,4 @@ export class ProfileObject implements Partial<IProfile> {
 
   @Field({ description: "Password of the familly account" })
   password: string;
-
-  @Field({ description: "Familly profiles" })
-  familly: any;
 }
-
-export default model<IProfile>("Profile", ProfileSchema);
