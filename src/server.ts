@@ -5,6 +5,7 @@ import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
 import { controllers } from "./controllers";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 async function main() {
   try {
@@ -22,9 +23,10 @@ async function main() {
 
     const app = express();
 
+    app.use(cors());
+    app.use(cookieParser("secret"));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(cors());
 
     const { router, apiUrl, docUrl } = BuildAPI({
       controllers,

@@ -13,5 +13,6 @@ export * from "./decorators/Param";
 export * from "./decorators/Query";
 
 export * from "./types/MiddlewareType";
+export { HttpResponse } from "./types/HttpResponse";
 
 export { Service } from "typedi";

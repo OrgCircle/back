@@ -19,15 +19,13 @@ export class FamillyController {
   @Put("/:id", { description: "Edit the familly matching the id" })
   async putFamilly(
     @Param("id") id: string,
-    @Body { email, name, password }: FamillyInput
+    @Body { email, name }: FamillyInput
   ) {
     const updatedFamilly = await this.famillyService.updateFamillyById(id, {
       email,
       name,
-      password,
     });
 
-    updatedFamilly.password = undefined;
     return updatedFamilly;
   }
 

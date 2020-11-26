@@ -1,5 +1,7 @@
-import { Body, ContextType, Controller, Ctx, Post } from "../../lib";
+import { Body, Controller, Get, HttpResponse, Post } from "../../lib";
+import { ProfileObject } from "../entity/Profile";
 import { LoginInput, RegisterInput } from "../inputs/AuthenticationInput";
+import { FamillyObject } from "../inputs/FamillyInputs";
 import { AuthenticationService } from "../services/AuthenticationService";
 
 @Controller("/auth")
@@ -8,35 +10,59 @@ export class AuthenticationController {
 
   @Post("/login", { description: "Route to login a familly" })
   async login(
-    @Body { email, password }: LoginInput,
-    @Ctx { res }: ContextType
-  ) {
-    const foundFamilly = await this.authenticationService.loginFamilly({
+    @Body { email, password, username }: LoginInput
+  ): HttpResponse<ProfileObject> {
+    const familly = await this.authenticationService.loginFamilly({
       email,
       password,
+      username,
     });
-    res.cookie("test", "test");
+    if (!familly) return { code: 404, message: "Family not found" };
 
-    if (foundFamilly) {
-      return foundFamilly;
-    }
-    return { error: "User not found" };
+    const { name, photoUrl, _id } = familly;
+    return { code: 200, data: { name, photoUrl, _id } };
   }
 
   @Post("/register", { description: "Register a new familly" })
   async postFamilly(
-    @Body { email, name, password, verifyPassword }: RegisterInput
+    @Body
+    { email, familyName, password, verifyPassword, username }: RegisterInput
+  ): HttpResponse<FamillyObject> {
+    if (password !== verifyPassword)
+      return { code: 400, message: "Password does not match" };
+
+    const familly = await this.authenticationService.registerFamilly({
+      email,
+      familyName,
+      password,
+      username,
+      verifyPassword,
+    });
+    const { _id, profiles } = familly;
+    const profils = profiles.map((profile) => {
+      profile.password = undefined;
+      return profile;
+    });
+    return {
+      code: 200,
+      data: {
+        email,
+        _id,
+        name: familyName,
+        profiles: profils,
+      },
+    };
+  }
+
+  @Get("/getAccountInfos", { description: "Register a new familly" })
+  async getAccountInfo(
+    @Body { email, familyName, password, verifyPassword }: RegisterInput
   ) {
     if (password !== verifyPassword)
       return { error: "Password does not match" };
 
-    const insertedFamilly = await this.authenticationService.registerFamilly({
-      email,
-      name,
-      password,
-    });
+    console.log(email, familyName);
 
-    insertedFamilly.password = undefined;
-    return insertedFamilly;
+    return null;
   }
 }

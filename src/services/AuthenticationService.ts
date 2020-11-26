@@ -1,17 +1,21 @@
 import { Service } from "../../lib";
 import Familly from "../entity/Familly";
 import { comparePassword, hashPassword } from "../helpers/password";
-import { LoginInput } from "../inputs/AuthenticationInput";
-import { FamillyInput } from "../inputs/FamillyInputs";
+import { LoginInput, RegisterInput } from "../inputs/AuthenticationInput";
 
 @Service()
 export class AuthenticationService {
-  async registerFamilly(famillyInput: FamillyInput) {
+  async registerFamilly(registerInput: RegisterInput) {
     try {
-      famillyInput.password = await hashPassword(famillyInput.password);
+      registerInput.password = await hashPassword(registerInput.password);
+      console.log(registerInput);
+
       const familly = new Familly({
-        ...famillyInput,
-        profiles: [{ name: "Profile 1" }],
+        name: registerInput.familyName,
+        email: registerInput.email,
+        profiles: [
+          { name: registerInput.username, password: registerInput.password },
+        ],
       });
 
       return await familly.save();
@@ -21,16 +25,25 @@ export class AuthenticationService {
     }
   }
 
-  async loginFamilly({ email, password }: LoginInput) {
-    const foundFamilly = await Familly.findOne({ email });
-    if (!foundFamilly) return null;
-    const isPasswordValid = await comparePassword(
-      password,
-      foundFamilly.password
+  async loginFamilly({ email, password, username }: LoginInput) {
+    const foundFamilly = await Familly.findOne({
+      email,
+      profiles: {
+        $elemMatch: {
+          name: username,
+        },
+      },
+    });
+
+    const profile = foundFamilly.profiles.find(
+      (profile) => profile.name === username
     );
 
+    if (!foundFamilly) return null;
+    const isPasswordValid = await comparePassword(password, profile.password);
+
     if (isPasswordValid) {
-      return foundFamilly;
+      return profile;
     }
     return null;
   }

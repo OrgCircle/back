@@ -4,20 +4,26 @@ import { IFamilly } from "../entity/Familly";
 
 @Input
 export class LoginInput implements Partial<IFamilly> {
-  @Field({})
+  @Field()
   email: string;
 
-  @Field({})
+  @Field()
+  username: string;
+
+  @Field()
   password: string;
 }
 
 @Input
 export class RegisterInput implements Partial<IFamilly> {
   @Field({})
-  name: string;
+  familyName: string;
 
   @Field({})
   email: string;
+
+  @Field()
+  username: string;
 
   @Field({})
   password: string;
