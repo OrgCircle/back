@@ -3,7 +3,8 @@ import bodyParser from "body-parser";
 import { BuildAPI } from "../lib";
 import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
-import { FamillyController } from "./controllers/FamillyController";
+import { controllers } from "./controllers";
+import cors from "cors";
 
 async function main() {
   try {
@@ -23,15 +24,17 @@ async function main() {
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(cors());
 
-    const { router } = BuildAPI({
-      controllers: [FamillyController],
+    const { router, apiUrl, docUrl } = BuildAPI({
+      controllers,
     });
 
     app.use(router);
 
     app.listen(5000, () => {
-      console.log("Server started on http://localhost:5000");
+      console.log(`Server started on http://localhost:5000${apiUrl}`);
+      console.log(`Doc started on http://localhost:5000${docUrl}`);
     });
   } catch (error) {
     console.error(error);

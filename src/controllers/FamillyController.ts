@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "../../lib";
-import { FamillyInput } from "../entity/Familly";
+import { Body, Controller, Delete, Get, Param, Put } from "../../lib";
+import { FamillyInput } from "../inputs/FamillyInputs";
 import { FamillyService } from "../services/FamillyService";
 
 @Controller("/familly")
@@ -14,18 +14,6 @@ export class FamillyController {
   @Get("/:id", { description: "Return the familly matching the id" })
   async getFamilly(@Param("id") id: string) {
     return await this.famillyService.getFamillyById(id);
-  }
-
-  @Post("/", { description: "Create a familly" })
-  async postFamilly(@Body { email, name, password }: FamillyInput) {
-    const insertedFamilly = await this.famillyService.createFamilly({
-      email,
-      name,
-      password,
-    });
-
-    insertedFamilly.password = undefined;
-    return insertedFamilly;
   }
 
   @Put("/:id", { description: "Edit the familly matching the id" })
