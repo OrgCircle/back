@@ -1,3 +1,5 @@
-export type HttpResponse<T> = Promise<{ code: number; data: T } | HttpError>;
+export type HttpResponse<T> = Promise<
+  { code: number; data: T | null } | HttpError
+>;
 
-type HttpError = { code: number; message: string };
+type HttpError = { code: number; error: string };

@@ -12,7 +12,7 @@ export const ProfileSchema: Schema = new Schema<IProfile>(
   {
     name: { type: String, required: true },
     photoUrl: { type: String, required: false },
-    password: { type: String, required: false },
+    password: { type: String, required: false, select: false },
   },
   { timestamps: true }
 );
@@ -39,4 +39,7 @@ export class ProfileObject implements Partial<IProfile> {
 
   @Field({ description: "Email of he familly" })
   photoUrl: string;
+
+  @Field({ description: "The token" })
+  token?: string;
 }

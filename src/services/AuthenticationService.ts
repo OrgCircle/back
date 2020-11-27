@@ -1,5 +1,6 @@
 import { Service } from "../../lib";
 import Familly from "../entity/Familly";
+import { JWTPayload } from "../helpers/jwt";
 import { comparePassword, hashPassword } from "../helpers/password";
 import { LoginInput, RegisterInput } from "../inputs/AuthenticationInput";
 
@@ -8,7 +9,6 @@ export class AuthenticationService {
   async registerFamilly(registerInput: RegisterInput) {
     try {
       registerInput.password = await hashPassword(registerInput.password);
-      console.log(registerInput);
 
       const familly = new Familly({
         name: registerInput.familyName,
@@ -20,7 +20,6 @@ export class AuthenticationService {
 
       return await familly.save();
     } catch (error) {
-      console.log(error);
       throw new Error("Familly creation failed");
     }
   }
@@ -33,18 +32,42 @@ export class AuthenticationService {
           name: username,
         },
       },
-    });
+    })
+      .select("+profiles.password")
+      .exec();
+
+    if (!foundFamilly) return null;
 
     const profile = foundFamilly.profiles.find(
       (profile) => profile.name === username
     );
 
-    if (!foundFamilly) return null;
     const isPasswordValid = await comparePassword(password, profile.password);
+    profile.password = undefined;
 
+    const { name, _id, photoUrl } = profile;
     if (isPasswordValid) {
-      return profile;
+      return { name, _id, photoUrl, famillyId: foundFamilly._id };
     }
     return null;
+  }
+
+  async getAccountInfo({ name, famillyId }: JWTPayload) {
+    const foundFamilly = await Familly.findOne({
+      _id: famillyId,
+      profiles: {
+        $elemMatch: {
+          name,
+        },
+      },
+    });
+
+    if (!foundFamilly) return null;
+
+    const profile = foundFamilly.profiles.find(
+      (profile) => profile.name === name
+    );
+
+    return { family: foundFamilly, profile };
   }
 }

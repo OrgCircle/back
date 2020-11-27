@@ -6,6 +6,8 @@ import { connect } from "mongoose";
 import { controllers } from "./controllers";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { verify } from "jsonwebtoken";
+import { JWT_SECRET } from "./config/keys";
 
 async function main() {
   try {
@@ -30,6 +32,25 @@ async function main() {
 
     const { router, apiUrl, docUrl } = BuildAPI({
       controllers,
+      auth: (roles, { req, res }) => {
+        try {
+          const auth = req.headers.authorization;
+          if (!auth) return false;
+          const token = auth.replace("Bearer ", "");
+
+          const decoded = verify(token, JWT_SECRET);
+
+          if (decoded) {
+            res.locals.user = decoded;
+            if (!roles) return true;
+          }
+
+          return true;
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      },
     });
 
     app.use(router);

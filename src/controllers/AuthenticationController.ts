@@ -1,8 +1,20 @@
-import { Body, Controller, Get, HttpResponse, Post } from "../../lib";
+import {
+  Authorized,
+  Body,
+  ContextType,
+  Controller,
+  Ctx,
+  Get,
+  HttpResponse,
+  Post,
+} from "../../lib";
 import { ProfileObject } from "../entity/Profile";
 import { LoginInput, RegisterInput } from "../inputs/AuthenticationInput";
 import { FamillyObject } from "../inputs/FamillyInputs";
 import { AuthenticationService } from "../services/AuthenticationService";
+import { sign } from "jsonwebtoken";
+import { JWT_SECRET } from "../config/keys";
+import { JWTPayload } from "../helpers/jwt";
 
 @Controller("/auth")
 export class AuthenticationController {
@@ -12,15 +24,20 @@ export class AuthenticationController {
   async login(
     @Body { email, password, username }: LoginInput
   ): HttpResponse<ProfileObject> {
-    const familly = await this.authenticationService.loginFamilly({
+    const profile = await this.authenticationService.loginFamilly({
       email,
       password,
       username,
     });
-    if (!familly) return { code: 404, message: "Family not found" };
 
-    const { name, photoUrl, _id } = familly;
-    return { code: 200, data: { name, photoUrl, _id } };
+    if (!profile) return { code: 404, error: "Family not found" };
+
+    const { name, photoUrl, _id, famillyId } = profile;
+
+    const payload: JWTPayload = { _id, famillyId, name };
+    const token = sign(payload, JWT_SECRET);
+
+    return { code: 200, data: { name, photoUrl, _id, token } };
   }
 
   @Post("/register", { description: "Register a new familly" })
@@ -29,7 +46,7 @@ export class AuthenticationController {
     { email, familyName, password, verifyPassword, username }: RegisterInput
   ): HttpResponse<FamillyObject> {
     if (password !== verifyPassword)
-      return { code: 400, message: "Password does not match" };
+      return { code: 400, error: "Password does not match" };
 
     const familly = await this.authenticationService.registerFamilly({
       email,
@@ -54,15 +71,16 @@ export class AuthenticationController {
     };
   }
 
-  @Get("/getAccountInfos", { description: "Register a new familly" })
-  async getAccountInfo(
-    @Body { email, familyName, password, verifyPassword }: RegisterInput
-  ) {
-    if (password !== verifyPassword)
-      return { error: "Password does not match" };
+  @Get("/accountInfo", {
+    description: "Return the account infos according to the token passed",
+  })
+  @Authorized()
+  async getAccountInfos(@Ctx { res }: ContextType): HttpResponse<any> {
+    const decoded: JWTPayload = res.locals.user;
+    const familly = await this.authenticationService.getAccountInfo(decoded);
 
-    console.log(email, familyName);
+    if (!familly) return { code: 404, error: "Family does not exist" };
 
-    return null;
+    return { code: 200, data: familly };
   }
 }

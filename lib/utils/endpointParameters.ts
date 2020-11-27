@@ -41,6 +41,13 @@ export function endpointParameters(
 
     try {
       const endpointReturnValue = await endPoint(...args);
+      if (endpointReturnValue.code) {
+        return res
+          .status(endpointReturnValue.code)
+          .json(
+            endpointReturnValue.data ?? { message: endpointReturnValue.error }
+          );
+      }
       return res.json(endpointReturnValue);
     } catch (error) {
       console.error(error);
