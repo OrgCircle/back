@@ -76,7 +76,7 @@ export class AuthenticationController {
   })
   @Authorized()
   async getAccountInfos(@Ctx { res }: ContextType): HttpResponse<any> {
-    const decoded: JWTPayload = res.locals.user;
+    const decoded = res.locals.user;
     const familly = await this.authenticationService.getAccountInfo(decoded);
 
     if (!familly) return { code: 404, error: "Family does not exist" };

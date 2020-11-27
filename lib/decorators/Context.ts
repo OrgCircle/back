@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
+import { JWTPayload } from "../../src/helpers/jwt";
 import { getAPIMetadataStorage } from "../metadatas/metadataStorage";
 
-export type ContextType = { req: Request; res: Response };
+export type ContextType = {
+  req: Request;
+  res: Response & { locals: { user: JWTPayload } };
+};
 
 /**
  * @Context {req,res} : ContextType
