@@ -3,7 +3,10 @@ import bodyParser from "body-parser";
 import { BuildAPI } from "../lib";
 import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
-import { FamillyController } from "./controllers/FamillyController";
+import { controllers } from "./controllers";
+import cors from "cors";
+import { verify } from "jsonwebtoken";
+import { JWT_SECRET } from "./config/keys";
 
 async function main() {
   try {
@@ -21,17 +24,38 @@ async function main() {
 
     const app = express();
 
+    app.use(cors());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
 
-    const { router } = BuildAPI({
-      controllers: [FamillyController],
+    const { router, apiUrl, docUrl } = BuildAPI({
+      controllers,
+      auth: (roles, { req, res }) => {
+        try {
+          const auth = req.headers.authorization;
+          if (!auth) return false;
+          const token = auth.replace("Bearer ", "");
+
+          const decoded = verify(token, JWT_SECRET);
+
+          if (decoded) {
+            res.locals.user = decoded;
+            if (!roles) return true;
+          }
+
+          return true;
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      },
     });
 
     app.use(router);
 
     app.listen(5000, () => {
-      console.log("Server started on http://localhost:5000");
+      console.log(`Server started on http://localhost:5000${apiUrl}`);
+      console.log(`Doc started on http://localhost:5000${docUrl}`);
     });
   } catch (error) {
     console.error(error);

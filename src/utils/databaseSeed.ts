@@ -1,20 +1,18 @@
 import Familly from "../entity/Familly";
+import { hashPassword } from "../helpers/password";
 // import Profile from "../entity/Profile";
 
 export async function seedDatabase() {
   // Create familly
 
-  // const defaultProfile = new Profile({
-  //   name: "John",
-  //   photoUrl: "path",
-  //   password: "shityPassword",
-  // });
-
+  const password = await hashPassword("hophop");
   const familly = new Familly({
     name: "DOE",
     email: "familly@doe.usa",
-    password: "passwordToPut",
-    profiles: [{ name: "John" }],
+    profiles: [
+      { name: "John", password },
+      { name: "Jean", password },
+    ],
   });
 
   await familly.save();

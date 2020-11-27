@@ -29,7 +29,7 @@ class MetadataStorage {
 
   addAuthHandler(roles: string | string[], { target, key }: RouteBasicID) {
     const routeIndex = this.findRouteOrCreate({ target, key });
-    this.routes[routeIndex].authRoles = roles;
+    this.routes[routeIndex].authRoles = roles ?? null;
   }
 
   addEndpoint(route: Route) {

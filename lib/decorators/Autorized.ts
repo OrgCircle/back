@@ -7,7 +7,7 @@ export type AuthorizedFunction = (
 ) => boolean;
 
 export const Authorized = (
-  roles: string[] | string = null
+  roles: string[] | string = undefined
 ): MethodDecorator => {
   return (target, key) => {
     getAPIMetadataStorage().addAuthHandler(roles, {

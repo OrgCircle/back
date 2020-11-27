@@ -13,6 +13,8 @@ export interface BuildApiOptions {
 
 interface BuildApiObject {
   router: Router;
+  apiUrl: string;
+  docUrl: string;
 }
 
 export const BuildAPI = (options: BuildApiOptions): BuildApiObject => {
@@ -29,5 +31,5 @@ export const BuildAPI = (options: BuildApiOptions): BuildApiObject => {
     generateApiDoc(router, options.docsUrl);
   }
 
-  return { router };
+  return { router, apiUrl: options.baseUrl, docUrl: options.docsUrl };
 };

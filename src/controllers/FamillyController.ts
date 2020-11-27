@@ -1,5 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "../../lib";
-import { FamillyInput } from "../entity/Familly";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpResponse,
+  Param,
+  Put,
+} from "../../lib";
+import { FamillyInput, FamillyObject } from "../inputs/FamillyInputs";
 import { FamillyService } from "../services/FamillyService";
 
 @Controller("/familly")
@@ -7,45 +15,34 @@ export class FamillyController {
   constructor(private famillyService: FamillyService) {}
 
   @Get("/", { description: "Return all families in database" })
-  async getFamillies() {
-    return await this.famillyService.getAllFamillies();
+  async getFamillies(): HttpResponse<FamillyObject[]> {
+    const families = await this.famillyService.getAllFamillies();
+    return { code: 200, data: families };
   }
 
   @Get("/:id", { description: "Return the familly matching the id" })
-  async getFamilly(@Param("id") id: string) {
-    return await this.famillyService.getFamillyById(id);
-  }
-
-  @Post("/", { description: "Create a familly" })
-  async postFamilly(@Body { email, name, password }: FamillyInput) {
-    const insertedFamilly = await this.famillyService.createFamilly({
-      email,
-      name,
-      password,
-    });
-
-    insertedFamilly.password = undefined;
-    return insertedFamilly;
+  async getFamilly(@Param("id") id: string): HttpResponse<FamillyObject> {
+    const family = await this.famillyService.getFamillyById(id);
+    return { code: 200, data: family };
   }
 
   @Put("/:id", { description: "Edit the familly matching the id" })
   async putFamilly(
     @Param("id") id: string,
-    @Body { email, name, password }: FamillyInput
-  ) {
+    @Body { email, name }: FamillyInput
+  ): HttpResponse<FamillyObject> {
     const updatedFamilly = await this.famillyService.updateFamillyById(id, {
       email,
       name,
-      password,
     });
 
-    updatedFamilly.password = undefined;
-    return updatedFamilly;
+    return { code: 201, data: updatedFamilly };
   }
 
   @Delete("/:id", { description: "Delete the familly matching the id" })
-  async deleteFamilly(@Param("id") id: string) {
-    const familly = await this.famillyService.deleteFamillyById(id);
-    return familly;
+  async deleteFamilly(@Param("id") id: string): HttpResponse<FamillyObject> {
+    const family = await this.famillyService.deleteFamillyById(id);
+    if (!family) return { code: 404, error: "Family not found" };
+    return { code: 204, data: null };
   }
 }

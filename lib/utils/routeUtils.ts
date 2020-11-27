@@ -12,10 +12,18 @@ export const generateRoutes = (router: Router, options?: BuildApiOptions) => {
         throw new Error("Authorized function not provided");
 
       const url = options.baseUrl.concat(controller.baseUrl).concat(route.path);
-      const authMiddleware: MiddlewareFunction = AuthorizedFunction(
-        Array.isArray(route.authRoles) ? route.authRoles : [route.authRoles],
-        options
-      );
+
+      const authMiddleware: MiddlewareFunction =
+        route.authRoles !== undefined
+          ? AuthorizedFunction(
+              route.authRoles === null
+                ? null
+                : Array.isArray(route.authRoles)
+                ? route.authRoles
+                : [route.authRoles],
+              options
+            )
+          : undefined;
 
       const { bodyParam, contextParam, paramsURLParam, queryURLParam } = route;
 
@@ -26,19 +34,34 @@ export const generateRoutes = (router: Router, options?: BuildApiOptions) => {
 
       switch (route.method) {
         case "GET":
-          router.get(url, authMiddleware, route.handlers || [], endPoint);
+          router.get(url, authMiddleware ?? [], route.handlers || [], endPoint);
           break;
         case "POST":
-          router.post(url, authMiddleware, route.handlers || [], endPoint);
+          router.post(
+            url,
+            authMiddleware ?? [],
+            route.handlers || [],
+            endPoint
+          );
           break;
         case "DELETE":
-          router.delete(url, authMiddleware, route.handlers || [], endPoint);
+          router.delete(
+            url,
+            authMiddleware ?? [],
+            route.handlers || [],
+            endPoint
+          );
           break;
         case "PUT":
-          router.put(url, authMiddleware, route.handlers || [], endPoint);
+          router.put(url, authMiddleware ?? [], route.handlers || [], endPoint);
           break;
         case "PATCH":
-          router.patch(url, authMiddleware, route.handlers || [], endPoint);
+          router.patch(
+            url,
+            authMiddleware ?? [],
+            route.handlers || [],
+            endPoint
+          );
           break;
       }
     });
