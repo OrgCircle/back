@@ -5,7 +5,6 @@ import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
 import { controllers } from "./controllers";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "./config/keys";
 
@@ -26,7 +25,6 @@ async function main() {
     const app = express();
 
     app.use(cors());
-    app.use(cookieParser("secret"));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
 
