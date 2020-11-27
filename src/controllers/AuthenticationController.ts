@@ -8,7 +8,7 @@ import {
   HttpResponse,
   Post,
 } from "../../lib";
-import { ProfileObject } from "../entity/Profile";
+import { ProfileObject } from "../inputs/ProfileInputs";
 import { LoginInput, RegisterInput } from "../inputs/AuthenticationInput";
 import { FamillyObject } from "../inputs/FamillyInputs";
 import { AuthenticationService } from "../services/AuthenticationService";
