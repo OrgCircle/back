@@ -3,19 +3,20 @@ import List, { ListInput, IList } from "../entity/List";
 
 @Service()
 export class ListService {
-  getAllLists(): Promise<IList[]> {
-    return List.find().exec();
+  getAllLists(famillyId: string): Promise<IList[]> {
+    return List.find({ famillyId }).exec();
   }
 
-  getListById(id: string): Promise<IList> {
-    return List.findById(id).exec();
+  getListById(id: string, famillyId: string): Promise<IList> {
+    return List.findOne({ famillyId, _id: id }).exec();
   }
 
-  async createList(listInput: ListInput): Promise<IList> {
+  async createList(listInput: ListInput, famillyId: string): Promise<IList> {
     try {
       console.log(listInput);
       const list = new List({
         ...listInput,
+        famillyId,
         /*name: listInput.name,
         content: JSON.parse(listInput.content as any),
         listType: JSON.parse(listInput.listType as any),*/
@@ -28,12 +29,12 @@ export class ListService {
     }
   }
 
-  async deleteListById(id: string): Promise<IList> {
-    return await List.findOneAndDelete({ _id: id }).exec();
+  async deleteListById(id: string, famillyId: string): Promise<IList> {
+    return await List.findOneAndDelete({ _id: id, famillyId }).exec();
   }
 
-  async updateListById(id: string, list: Partial<IList>) {
-    return await List.findOneAndUpdate({ _id: id }, list, {
+  async updateListById(id: string, list: Partial<IList>, famillyId: string) {
+    return await List.findOneAndUpdate({ _id: id, famillyId }, list, {
       new: true,
     });
   }

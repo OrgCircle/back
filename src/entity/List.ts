@@ -1,10 +1,11 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, Schema, model, Types } from "mongoose";
 import { Field, ObjectType } from "../../lib";
 import { Input } from "../../lib/decorators/Input";
 import { ITask, TaskSchema } from "./Task";
 import { IListType, ListTypeSchema } from "./ListType";
 
 export interface IList extends Document {
+  famillyId: Types.ObjectId;
   name: string;
   content?: ITask[];
   listType: IListType;
@@ -12,6 +13,7 @@ export interface IList extends Document {
 
 const ListSchema: Schema = new Schema<IList>(
   {
+    famillyId: { type: Types.ObjectId, ref: "Familly" },
     name: { type: String, required: true },
     content: { type: [TaskSchema] },
     listType: { type: ListTypeSchema, required: true },

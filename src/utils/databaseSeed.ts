@@ -16,9 +16,20 @@ export async function seedDatabase() {
     ],
   });
 
+  const familly2 = new Familly({
+    name: "DOE2",
+    email: "familly@doe2.usa",
+    profiles: [
+      { name: "John2", password },
+      { name: "Jean2", password },
+    ],
+  });
+
   await familly.save();
+  await familly2.save();
 
   const list = new List({
+    famillyId: familly._id,
     name: "Chores",
     content: [
       { label: "Dishes", state: true },
@@ -31,6 +42,7 @@ export async function seedDatabase() {
   });
 
   const list2 = new List({
+    famillyId: familly2._id,
     name: "Chores2",
     content: [
       {
