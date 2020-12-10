@@ -13,7 +13,6 @@ export class ListService {
 
   async createList(listInput: ListInput, famillyId: string): Promise<IList> {
     try {
-      console.log(listInput);
       const list = new List({
         ...listInput,
         famillyId,

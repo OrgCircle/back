@@ -14,7 +14,7 @@ export type Route = {
   path?: string;
   handlers?: MiddlewareFunction[];
   authRoles?: string | string[];
-  responseFields?: Field[];
+  responseType?: { isArray: boolean; fields: Field[] };
   inputs?: Field[];
   queryURLParam?: Array<{ index: number; paramName: string }>;
   paramsURLParam?: Array<{ index: number; paramName: string }>;
