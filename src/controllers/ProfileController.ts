@@ -13,7 +13,7 @@ import { IFamilly } from "../entity/Familly";
 import { ProfileInput } from "../inputs/ProfileInputs";
 import { ProfileService } from "../services/ProfileService";
 
-@Controller("/profile")
+@Controller("/profiles")
 export class ProfileController {
   constructor(private profileService: ProfileService) {}
 

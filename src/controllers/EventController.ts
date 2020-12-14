@@ -16,7 +16,7 @@ import { IEvent } from "../entity/Event";
 import { EventInput, EventObject } from "../inputs/EventInputs";
 import { EventService } from "../services/EventService";
 
-@Controller("/event")
+@Controller("/events")
 export class EventController {
   constructor(private eventService: EventService) {}
 

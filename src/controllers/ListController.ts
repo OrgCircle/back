@@ -14,7 +14,7 @@ import {
 import { IList, ListInput, ListObject } from "../entity/List";
 import { ListService } from "../services/ListService";
 
-@Controller("/list")
+@Controller("/lists")
 export class ListController {
   constructor(private listService: ListService) {}
 

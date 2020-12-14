@@ -11,7 +11,7 @@ import { ReturnType } from "../../lib/decorators/ReturnType";
 import { FamillyInput, FamillyObject } from "../inputs/FamillyInputs";
 import { FamillyService } from "../services/FamillyService";
 
-@Controller("/familly")
+@Controller("/famillies")
 export class FamillyController {
   constructor(private famillyService: FamillyService) {}
 
