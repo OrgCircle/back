@@ -11,7 +11,7 @@ export class FamillyInput implements Partial<IFamilly> {
   @Field({ description: "Email of he familly" })
   email: string;
 
-  @Field()
+  @Field({ description: "Username og the profile" })
   username: string;
 
   @Field({ description: "Password of the familly account" })
