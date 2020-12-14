@@ -11,6 +11,7 @@ export class ProfileService {
     familly.profiles.push({
       name: profileInput.name,
       password: await hashPassword(profileInput.password),
+      role: "USER",
     } as any);
     return await familly.save();
   }

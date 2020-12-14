@@ -8,8 +8,8 @@ export interface IEvent extends Document {
   startDate: Date;
   endDate: Date;
   location: string;
-  assigned_to: Partial<IProfile>;
-  created_by: Partial<IProfile>;
+  assigned_to: Partial<IProfile> | string;
+  created_by: Partial<IProfile> | string;
 }
 
 const EventSchema: Schema = new Schema<IEvent>(

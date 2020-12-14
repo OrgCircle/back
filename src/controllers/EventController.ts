@@ -24,9 +24,11 @@ export class EventController {
   @Authorized()
   async getEvents(
     @Ctx { res }: ContextType,
-    @Query("startRange") startRange: Date,
-    @Query("endRange") endRange: Date
+    @Query("startRange") startRange: string,
+    @Query("endRange") endRange: string
   ): HttpResponse<EventObject[]> {
+    console.log(startRange, endRange);
+
     const { famillyId } = res.locals.user;
     if (startRange && endRange) {
       const data = await this.eventService.getEventsBetweenDates(

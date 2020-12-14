@@ -22,18 +22,16 @@ export class EventService {
 
   async getEventsBetweenDates(
     famillyId: string,
-    startDate: Date,
-    endDate: Date
+    startDate: string,
+    endDate: string
   ) {
     return Event.find({
       famillyId,
       startDate: {
-        $gte: startDate,
-        $lt: endDate,
+        $gte: new Date(startDate),
       },
       endDate: {
-        $gte: startDate,
-        $lt: endDate,
+        $lte: new Date(endDate),
       },
     }).exec();
   }
