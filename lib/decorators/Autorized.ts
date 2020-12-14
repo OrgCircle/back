@@ -4,7 +4,7 @@ import { getAPIMetadataStorage } from "../metadatas/metadataStorage";
 export type AuthorizedFunction = (
   roles: string[] | null,
   context: { req: Request; res: Response }
-) => boolean;
+) => Promise<boolean>;
 
 export const Authorized = (
   roles: string[] | string = undefined

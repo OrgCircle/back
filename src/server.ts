@@ -7,6 +7,8 @@ import { controllers } from "./controllers";
 import cors from "cors";
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "./config/keys";
+import { JWTPayload } from "./helpers/jwt";
+import Familly from "./entity/Familly";
 
 async function main() {
   try {
@@ -30,15 +32,25 @@ async function main() {
 
     const { router, apiUrl, docUrl } = BuildAPI({
       controllers,
-      auth: (roles, { req, res }) => {
+      auth: async (roles, { req, res }) => {
         try {
           const auth = req.headers.authorization;
           if (!auth) return false;
           const token = auth.replace("Bearer ", "");
 
-          const decoded = verify(token, JWT_SECRET);
+          const decoded = verify(token, JWT_SECRET) as JWTPayload;
 
           if (decoded) {
+            const familly = await Familly.findOne({
+              _id: decoded.famillyId,
+              profiles: {
+                $elemMatch: {
+                  _id: decoded._id,
+                },
+              },
+            });
+
+            if (!familly) return false;
             res.locals.user = decoded;
             if (!roles) return true;
           }
