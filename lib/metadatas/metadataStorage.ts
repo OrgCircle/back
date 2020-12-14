@@ -38,24 +38,18 @@ class MetadataStorage {
       key: route.key,
     });
 
-    const returnType: Function = Reflect.getMetadata(
-      "design:returntype",
-      route.target.prototype,
-      route.key
-    );
-
-    if (returnType && returnType.name !== "Promise") {
-      const responseFields = this.routes[index].responseFields || [];
-
-      const type = this.types.find((type) => type.name === returnType.name);
-      if (type) {
-        const fields = type.fields;
-        responseFields.push(...fields);
-        this.routes[index].responseFields = responseFields;
-      }
-    }
-
     this.routes[index] = { ...this.routes[index], ...route };
+  }
+
+  addResponseType(
+    { target, key }: RouteBasicID,
+    objectName: string,
+    isArray: boolean
+  ) {
+    const index = this.findRouteOrCreate({ key, target });
+
+    const type = this.types.find((type) => type.name === objectName);
+    this.routes[index].responseType = { isArray, fields: type.fields };
   }
 
   findRouteOrCreate({ target, key }: RouteBasicID): number {

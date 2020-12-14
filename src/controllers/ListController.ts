@@ -44,7 +44,6 @@ export class ListController {
     @Body { name, content, listType }: ListInput,
     @Ctx { res }: ContextType
   ): HttpResponse<ListObject> {
-    console.log(content, listType);
     const { famillyId } = res.locals.user;
     const insertedList = await this.listService.createList(
       {

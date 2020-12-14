@@ -7,6 +7,7 @@ import {
   Param,
   Put,
 } from "../../lib";
+import { ReturnType } from "../../lib/decorators/ReturnType";
 import { FamillyInput, FamillyObject } from "../inputs/FamillyInputs";
 import { FamillyService } from "../services/FamillyService";
 
@@ -15,6 +16,7 @@ export class FamillyController {
   constructor(private famillyService: FamillyService) {}
 
   @Get("/", { description: "Return all families in database" })
+  @ReturnType(() => [FamillyObject])
   async getFamillies(): HttpResponse<FamillyObject[]> {
     const families = await this.famillyService.getAllFamillies();
     return { code: 200, data: families };

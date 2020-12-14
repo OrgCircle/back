@@ -35,7 +35,8 @@ html(lang="fr")
 								td(class="border border-gray-400 p-2")=input.description
 
 
-			if route.responseFields
+			if route.responseType
+				div="IsArray : "+route.responseType.isArray
 				div Response :
 				table(class="table-auto border-collapse")
 					thead
@@ -45,7 +46,7 @@ html(lang="fr")
 							th(class="border border-gray-400 p-2") Nullable
 							th(class="border border-gray-400 p-2") description
 					tbody
-						each field in route.responseFields
+						each field in route.responseType.fields
 							tr
 								td(class="border border-gray-400 p-2")=field.name
 								td(class="border border-gray-400 p-2")
