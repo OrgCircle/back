@@ -19,6 +19,24 @@ export class EventService {
   async getEvents(famillyId: string) {
     return Event.find({ famillyId }).exec();
   }
+
+  async getEventsBetweenDates(
+    famillyId: string,
+    startDate: Date,
+    endDate: Date
+  ) {
+    return Event.find({
+      famillyId,
+      startDate: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+      endDate: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    }).exec();
+  }
   async deleteEvent(eventId: string, famillyId: string) {
     return Event.findOneAndDelete({ famillyId, _id: eventId }).exec();
   }

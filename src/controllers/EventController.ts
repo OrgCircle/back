@@ -10,6 +10,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "../../lib";
 import { IEvent } from "../entity/Event";
 import { EventInput, EventObject } from "../inputs/EventInputs";
@@ -21,10 +22,22 @@ export class EventController {
 
   @Get("/", { description: "Get familly events" })
   @Authorized()
-  async getEvents(@Ctx { res }: ContextType): HttpResponse<EventObject[]> {
+  async getEvents(
+    @Ctx { res }: ContextType,
+    @Query("startRange") startRange: Date,
+    @Query("endRange") endRange: Date
+  ): HttpResponse<EventObject[]> {
     const { famillyId } = res.locals.user;
-    const events = await this.eventService.getEvents(famillyId);
-    return { code: 200, data: events };
+    if (startRange && endRange) {
+      const data = await this.eventService.getEventsBetweenDates(
+        famillyId,
+        startRange,
+        endRange
+      );
+      return { code: 200, data };
+    }
+    const data = await this.eventService.getEvents(famillyId);
+    return { code: 200, data };
   }
 
   @Post("/", { description: "Create a new Event" })
@@ -33,7 +46,7 @@ export class EventController {
     @Ctx { res }: ContextType,
     @Body { assigned_to, endDate, location, name, startDate }: EventInput
   ): HttpResponse<IEvent> {
-    const event = await this.eventService.createEvent(
+    const data = await this.eventService.createEvent(
       {
         endDate,
         assigned_to,
@@ -43,7 +56,7 @@ export class EventController {
       },
       res.locals.user
     );
-    return { code: 201, data: event };
+    return { code: 201, data };
   }
 
   @Get("/:id")
