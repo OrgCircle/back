@@ -45,9 +45,9 @@ export class AuthenticationService {
     const isPasswordValid = await comparePassword(password, profile.password);
     profile.password = undefined;
 
-    const { name, _id, photoUrl } = profile;
+    const { name, _id, photoUrl, role } = profile;
     if (isPasswordValid) {
-      return { name, _id, photoUrl, famillyId: foundFamilly._id };
+      return { name, _id, photoUrl, famillyId: foundFamilly._id, role };
     }
     return null;
   }

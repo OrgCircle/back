@@ -44,7 +44,8 @@ export class EventService {
   async patchEvent(
     famillyId: string,
     eventId: string,
-    { assigned_to, endDate, location, name, startDate }: EventInput
+    { assigned_to, endDate, location, name, startDate }: EventInput,
+    { _id, role }: { _id: string; role: string }
   ) {
     const event: Partial<IEvent> = {};
     if (assigned_to) event.assigned_to = assigned_to;
@@ -52,9 +53,20 @@ export class EventService {
     if (location) event.location = location;
     if (name) event.name = name;
     if (startDate) event.startDate = startDate;
-    return Event.findOneAndUpdate(
-      { _id: eventId, famillyId },
-      { event }
-    ).exec();
+
+    const foundEvent = await Event.findOne({ _id: eventId, famillyId });
+    console.log(foundEvent.assigned_to);
+
+    if (
+      foundEvent.created_by === _id ||
+      foundEvent.assigned_to.includes(_id) ||
+      role === "ADMIN"
+    ) {
+      return await Event.findOneAndUpdate(
+        { _id: eventId, famillyId },
+        { event }
+      ).exec();
+    }
+    return null;
   }
 }

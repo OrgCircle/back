@@ -64,7 +64,7 @@ export async function seedDatabase() {
   await Event.create({
     name: "Aller chez Tom",
     startDate: new Date(),
-    assigned_to: undefined,
+    assigned_to: [familly.profiles[0]._id, familly.profiles[1]._id],
     created_by: familly.profiles[0]._id,
     endDate: new Date(2020, 12, 24),
     famillyId: familly._id,

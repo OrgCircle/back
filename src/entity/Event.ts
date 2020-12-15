@@ -8,7 +8,7 @@ export interface IEvent extends Document {
   startDate: Date;
   endDate: Date;
   location: string;
-  assigned_to: Partial<IProfile> | string;
+  assigned_to: Partial<IProfile>[] | string;
   created_by: Partial<IProfile> | string;
 }
 
@@ -19,7 +19,7 @@ const EventSchema: Schema = new Schema<IEvent>(
     startDate: { type: Date },
     endDate: { type: Date },
     location: { type: String },
-    assigned_to: { type: ObjectId, ref: "Familly.profiles" },
+    assigned_to: [{ type: ObjectId, ref: "Familly.profiles" }],
     created_by: { type: ObjectId, ref: "Familly.profiles" },
   },
   { timestamps: true }

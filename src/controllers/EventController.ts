@@ -80,15 +80,21 @@ export class EventController {
     @Ctx { res }: ContextType,
     @Param("id") eventId: string
   ): HttpResponse<EventObject> {
-    const { famillyId } = res.locals.user;
-    const event = await this.eventService.patchEvent(famillyId, eventId, {
-      assigned_to,
-      endDate,
-      location,
-      name,
-      startDate,
-    });
-    return { code: 201, data: event };
+    const { famillyId, _id, role } = res.locals.user;
+    const data = await this.eventService.patchEvent(
+      famillyId,
+      eventId,
+      {
+        assigned_to,
+        endDate,
+        location,
+        name,
+        startDate,
+      },
+      { _id, role }
+    );
+    if (!data) return { code: 403, error: "Not authorized" };
+    return { code: 201, data };
   }
 
   @Delete("/:id")

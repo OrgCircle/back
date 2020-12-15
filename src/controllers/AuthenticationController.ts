@@ -32,9 +32,9 @@ export class AuthenticationController {
 
     if (!profile) return { code: 404, error: "Family not found" };
 
-    const { name, photoUrl, _id, famillyId } = profile;
+    const { name, photoUrl, _id, famillyId, role } = profile;
 
-    const payload: JWTPayload = { _id, famillyId, name };
+    const payload: JWTPayload = { _id, famillyId, name, role };
     const token = sign(payload, JWT_SECRET);
 
     return { code: 200, data: { name, photoUrl, _id, token } };

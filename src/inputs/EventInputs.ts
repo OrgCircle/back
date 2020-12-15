@@ -20,7 +20,7 @@ export class EventObject implements Partial<IEvent> {
   location: string;
 
   @Field({ description: "Assigned to profile", nullable: true })
-  assigned_to: Partial<IProfile>;
+  assigned_to: Partial<IProfile>[] | string;
 
   @Field({ description: "Created by profile" })
   created_by: Partial<IProfile>;
@@ -39,6 +39,6 @@ export class EventInput implements Partial<IEvent> {
   @Field({ description: "Location of the event", nullable: true })
   location: string;
 
-  @Field({ description: "Assigned to profile", nullable: true })
-  assigned_to: Partial<IProfile>;
+  @Field({ description: "Assigned to profile : Array of id", nullable: true })
+  assigned_to: Partial<IProfile>[] | string;
 }

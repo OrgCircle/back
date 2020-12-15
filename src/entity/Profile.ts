@@ -4,6 +4,7 @@ export interface IProfile extends Document {
   name: string;
   photoUrl?: string;
   password?: string;
+  role: string;
 }
 
 export const ProfileSchema: Schema = new Schema<IProfile>(
