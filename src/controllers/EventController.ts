@@ -27,8 +27,6 @@ export class EventController {
     @Query("startRange") startRange: string,
     @Query("endRange") endRange: string
   ): HttpResponse<EventObject[]> {
-    console.log(startRange, endRange);
-
     const { famillyId } = res.locals.user;
     if (startRange && endRange) {
       const data = await this.eventService.getEventsBetweenDates(
@@ -93,7 +91,6 @@ export class EventController {
       },
       { _id, role }
     );
-    if (!data) return { code: 403, error: "Not authorized" };
     return { code: 201, data };
   }
 

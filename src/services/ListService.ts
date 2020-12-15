@@ -47,8 +47,6 @@ export class ListService {
     if (label !== undefined) task.label = label;
     if (state !== undefined) task.state = state;
 
-    console.log(task);
-
     return List.findOneAndUpdate(
       { famillyId, _id: listId, "content._id": taskId },
       {
