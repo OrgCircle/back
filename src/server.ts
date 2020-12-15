@@ -28,6 +28,7 @@ async function main() {
 
     const app = express();
 
+    app.set("views", "/views");
     app.use(cors());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
