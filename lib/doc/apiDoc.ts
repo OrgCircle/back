@@ -5,7 +5,7 @@ import { join, dirname } from "path";
 export const generateApiDoc = (router: Router, docUrl: string) => {
   const apiStorage = getAPIMetadataStorage();
 
-  console.log(join(dirname(__dirname), "./views/controller.pug"));
+  console.log(join(dirname(__dirname), "/views/controller.pug"));
 
   router.get(docUrl, (_req, res) => {
     const controllers = apiStorage.controllers.sort((a, b) =>
