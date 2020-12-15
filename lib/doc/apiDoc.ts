@@ -5,15 +5,13 @@ import { join, dirname } from "path";
 export const generateApiDoc = (router: Router, docUrl: string) => {
   const apiStorage = getAPIMetadataStorage();
 
-  console.log(join(dirname(__dirname), "./doc/views/controller.pug"));
-
   router.get(docUrl, (_req, res) => {
     const controllers = apiStorage.controllers.sort((a, b) =>
       a.target.name.localeCompare(b.target.name)
     );
 
     if (controllers) {
-      res.render("/views/index.pug", {
+      res.render("./views/index.pug", {
         controllers,
         docUrl,
       });
