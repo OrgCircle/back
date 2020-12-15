@@ -27,7 +27,7 @@ async function main() {
     // await seedDatabase();
 
     const app = express();
-    app.set("views", "~");
+    app.set("views", "/app/build/lib/doc/");
     app.use(cors());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
