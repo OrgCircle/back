@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
 import { Service } from "../../lib";
 import List, { ListInput, IList } from "../entity/List";
+import { TaskInput } from "../entity/Task";
 
 @Service()
 export class ListService {
@@ -16,9 +18,6 @@ export class ListService {
       const list = new List({
         ...listInput,
         famillyId,
-        /*name: listInput.name,
-        content: JSON.parse(listInput.content as any),
-        listType: JSON.parse(listInput.listType as any),*/
       });
 
       return await list.save();
@@ -36,5 +35,42 @@ export class ListService {
     return await List.findOneAndUpdate({ _id: id, famillyId }, list, {
       new: true,
     });
+  }
+
+  async updateTask(
+    famillyId: string,
+    taskId: string,
+    listId: string,
+    { label, state }: TaskInput
+  ) {
+    const task: Partial<TaskInput> & { _id: string } = { _id: taskId };
+    if (label !== undefined) task.label = label;
+    if (state !== undefined) task.state = state;
+
+    console.log(task);
+
+    return List.findOneAndUpdate(
+      { famillyId, _id: listId, "content._id": taskId },
+      {
+        $set: {
+          "content.$": task,
+        },
+      },
+      { new: true }
+    );
+  }
+
+  async deleteTask(famillyId: string, taskId: string, listId: string) {
+    return await List.findOneAndUpdate(
+      { famillyId, _id: listId, "content._id": taskId },
+      {
+        $pull: {
+          content: {
+            _id: new ObjectId(taskId),
+          },
+        },
+      },
+      { new: true }
+    );
   }
 }

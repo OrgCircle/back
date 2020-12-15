@@ -13,9 +13,11 @@ export class EventService {
     });
     return await event.save();
   }
+
   async getEvent(famillyId: string, eventId: string) {
     return Event.findOne({ famillyId, _id: eventId }).exec();
   }
+
   async getEvents(famillyId: string) {
     return Event.find({ famillyId }).exec();
   }
@@ -38,6 +40,7 @@ export class EventService {
   async deleteEvent(eventId: string, famillyId: string) {
     return Event.findOneAndDelete({ famillyId, _id: eventId }).exec();
   }
+
   async patchEvent(
     famillyId: string,
     eventId: string,

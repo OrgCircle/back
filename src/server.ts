@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { BuildAPI } from "../lib";
-import { seedDatabase } from "./utils/databaseSeed";
+// import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
 import { controllers } from "./controllers";
 import cors from "cors";
@@ -13,16 +13,17 @@ import Familly from "./entity/Familly";
 async function main() {
   try {
     console.info("Connecting to database...");
-    const conn = await connect("mongodb://localhost/circle-fullstack", {
+    // const conn =
+    await connect("mongodb://localhost/circle-fullstack", {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
     });
-    await conn.connection.db.dropDatabase();
+    // await conn.connection.db.dropDatabase();
 
-    console.info("Seeding database ...");
-    await seedDatabase();
+    // console.info("Seeding database ...");
+    // await seedDatabase();
 
     const app = express();
 

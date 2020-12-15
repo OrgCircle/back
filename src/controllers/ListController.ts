@@ -12,6 +12,7 @@ import {
   Patch,
 } from "../../lib";
 import { IList, ListInput, ListObject } from "../entity/List";
+import { TaskInput } from "../entity/Task";
 import { ListService } from "../services/ListService";
 
 @Controller("/lists")
@@ -76,6 +77,34 @@ export class ListController {
     );
 
     return { code: 201, data: updatedList };
+  }
+
+  @Patch("/:id/task/:taskId")
+  @Authorized()
+  async patchTask(
+    @Body { label, state }: TaskInput,
+    @Ctx { res }: ContextType,
+    @Param("id") listId: string,
+    @Param("taskId") taskId: string
+  ): HttpResponse<ListObject> {
+    const { famillyId } = res.locals.user;
+    const data = await this.listService.updateTask(famillyId, taskId, listId, {
+      label,
+      state,
+    });
+    return { code: 201, data };
+  }
+
+  @Delete("/:id/task/:taskId")
+  @Authorized()
+  async deleteTask(
+    @Ctx { res }: ContextType,
+    @Param("id") listId: string,
+    @Param("taskId") taskId: string
+  ): HttpResponse<ListObject> {
+    const { famillyId } = res.locals.user;
+    const data = await this.listService.deleteTask(famillyId, taskId, listId);
+    return { code: 201, data };
   }
 
   @Delete("/:id", { description: "Delete the list matching the id" })
