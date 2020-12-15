@@ -6,6 +6,7 @@ import { connect } from "mongoose";
 import { controllers } from "./controllers";
 import cors from "cors";
 import { auth } from "./helpers/auth";
+require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 async function main() {
@@ -34,6 +35,7 @@ async function main() {
     const { router, apiUrl, docUrl } = BuildAPI({
       controllers,
       auth,
+      generateDocs: false,
     });
 
     app.use(router);
