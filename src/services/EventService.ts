@@ -39,7 +39,12 @@ export class EventService {
     }).exec();
   }
   async deleteEvent(eventId: string, famillyId: string) {
-    return Event.findOneAndDelete({ famillyId, _id: eventId }).exec();
+    const event = await Event.findOneAndDelete({
+      famillyId,
+      _id: eventId,
+    }).exec();
+    if (!event) throw new HttpException(404, "Event not found");
+    return event;
   }
 
   async patchEvent(
