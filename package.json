@@ -8,7 +8,7 @@
     "build:css": "postcss ./src/doc/styles/src.css -o ./src/doc/styles/out.css",
     "build": "tsc && npm run copy-files",
     "start": "node ./build/src/server.js",
-    "copy-files": "cp -a ./lib/doc/ ./build/lib/doc && rm ./build/lib/doc/apiDoc.ts"
+    "copy-files": "cp -a /lib/doc/ /build/lib/doc && rm /build/lib/doc/apiDoc.ts"
   },
   "keywords": [],
   "author": "",
