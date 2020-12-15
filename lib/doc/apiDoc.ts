@@ -25,7 +25,7 @@ export const generateApiDoc = (router: Router, docUrl: string) => {
       (controller) => controller.target.name === req.params.name
     );
     if (controller) {
-      res.render(__dirname + "./views/controller.pug", {
+      res.render(__dirname + "/views/controller.pug", {
         controller,
         docUrl,
       });
