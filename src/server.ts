@@ -11,7 +11,9 @@ async function main() {
   try {
     console.info("Connecting to database...");
     // const conn =
-    await connect("mongodb://localhost/circle-fullstack", {
+    await connect(process.env.MONGO_URL, {
+      user: process.env.MONGO_USER,
+      pass: process.env.MONGO_PASS,
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,
