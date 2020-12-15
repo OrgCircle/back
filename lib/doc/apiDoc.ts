@@ -11,7 +11,7 @@ export const generateApiDoc = (router: Router, docUrl: string) => {
     );
 
     if (controllers) {
-      res.render("./views/index.pug", {
+      res.render("index.pug", {
         controllers,
         docUrl,
       });
