@@ -5,6 +5,8 @@ import { join, dirname } from "path";
 export const generateApiDoc = (router: Router, docUrl: string) => {
   const apiStorage = getAPIMetadataStorage();
 
+  console.log(join(process.cwd(), "/lib/doc/views", "index.pug"));
+
   router.get(docUrl, (_req, res) => {
     const controllers = apiStorage.controllers.sort((a, b) =>
       a.target.name.localeCompare(b.target.name)
