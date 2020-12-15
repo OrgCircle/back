@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { Service } from "../../lib";
 import List, { ListInput, IList } from "../entity/List";
-import { TaskInput } from "../entity/Task";
+import { ITask, TaskInput } from "../entity/Task";
 
 @Service()
 export class ListService {
@@ -68,6 +68,22 @@ export class ListService {
           content: {
             _id: new ObjectId(taskId),
           },
+        },
+      },
+      { new: true }
+    );
+  }
+
+  async createTask(
+    famillyId: string,
+    listId: string,
+    { label, state }: TaskInput
+  ) {
+    return List.findByIdAndUpdate(
+      { famillyId, _id: listId },
+      {
+        $push: {
+          content: { label, state } as ITask,
         },
       },
       { new: true }

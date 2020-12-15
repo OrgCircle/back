@@ -79,7 +79,18 @@ export class ListController {
     return { code: 201, data: updatedList };
   }
 
-  @Patch("/:id/task/:taskId")
+  @Delete("/:id", { description: "Delete the list matching the id" })
+  @Authorized()
+  async deleteList(
+    @Param("id") id: string,
+    @Ctx { res }: ContextType
+  ): HttpResponse<null> {
+    const { famillyId } = res.locals.user;
+    await this.listService.deleteListById(id, famillyId);
+    return { code: 204, data: null };
+  }
+
+  @Patch("/:id/task/:taskId", { description: "Patch a single task" })
   @Authorized()
   async patchTask(
     @Body { label, state }: TaskInput,
@@ -95,7 +106,7 @@ export class ListController {
     return { code: 201, data };
   }
 
-  @Delete("/:id/task/:taskId")
+  @Delete("/:id/task/:taskId", { description: "Delete a single task" })
   @Authorized()
   async deleteTask(
     @Ctx { res }: ContextType,
@@ -107,14 +118,18 @@ export class ListController {
     return { code: 201, data };
   }
 
-  @Delete("/:id", { description: "Delete the list matching the id" })
+  @Post("/:id/task", { description: "Add a single task to the list" })
   @Authorized()
-  async deleteList(
-    @Param("id") id: string,
-    @Ctx { res }: ContextType
-  ): HttpResponse<null> {
+  async createTask(
+    @Body { label, state }: TaskInput,
+    @Ctx { res }: ContextType,
+    @Param("id") listId: string
+  ): HttpResponse<ListObject> {
     const { famillyId } = res.locals.user;
-    await this.listService.deleteListById(id, famillyId);
-    return { code: 204, data: null };
+    const data = await this.listService.createTask(famillyId, listId, {
+      label,
+      state,
+    });
+    return { code: 201, data };
   }
 }
