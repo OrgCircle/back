@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build:css": "postcss ./src/doc/styles/src.css -o ./src/doc/styles/out.css",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "./build/src/server.js"
   },
   "keywords": [],
   "author": "",
