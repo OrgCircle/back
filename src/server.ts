@@ -35,7 +35,6 @@ async function main() {
     const { router, apiUrl, docUrl } = BuildAPI({
       controllers,
       auth,
-      generateDocs: false,
     });
 
     app.use(router);
