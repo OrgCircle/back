@@ -7,6 +7,7 @@ import { controllers } from "./controllers";
 import cors from "cors";
 import { auth } from "./helpers/auth";
 
+const PORT = process.env.PORT || 5000;
 async function main() {
   try {
     console.info("Connecting to database...");
@@ -37,9 +38,9 @@ async function main() {
 
     app.use(router);
 
-    app.listen(5000, () => {
-      console.log(`Server started on http://localhost:5000${apiUrl}`);
-      console.log(`Doc started on http://localhost:5000${docUrl}`);
+    app.listen(PORT, () => {
+      console.log(`Server started on http://localhost:${PORT}${apiUrl}`);
+      console.log(`Doc started on http://localhost:${PORT}${docUrl}`);
     });
   } catch (error) {
     console.error(error);
