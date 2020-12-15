@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getAPIMetadataStorage } from "../metadatas/metadataStorage";
-import { join } from "path";
+import { join, dirname } from "path";
 
 export const generateApiDoc = (router: Router, docUrl: string) => {
   const apiStorage = getAPIMetadataStorage();
@@ -11,7 +11,7 @@ export const generateApiDoc = (router: Router, docUrl: string) => {
     );
 
     if (controllers) {
-      res.render(join(__dirname, "./views/index.pug"), {
+      res.render(join(dirname(__dirname), "./views/index.pug"), {
         controllers,
         docUrl,
       });
@@ -25,7 +25,7 @@ export const generateApiDoc = (router: Router, docUrl: string) => {
       (controller) => controller.target.name === req.params.name
     );
     if (controller) {
-      res.render(join(__dirname, "./views/controller.pug"), {
+      res.render(join(dirname(__dirname), "./views/controller.pug"), {
         controller,
         docUrl,
       });
@@ -42,7 +42,7 @@ export const generateApiDoc = (router: Router, docUrl: string) => {
         .routes.find((route) => route.key === req.params.route);
 
       if (route) {
-        res.render(join(__dirname, "./views/route.pug"), {
+        res.render(join(dirname(__dirname), "./views/route.pug"), {
           route,
           docUrl,
         });
@@ -55,7 +55,7 @@ export const generateApiDoc = (router: Router, docUrl: string) => {
   router.get(docUrl.concat("/type/:name"), (req, res) => {
     const type = apiStorage.types.find((typ) => req.params.name === typ.name);
     if (type) {
-      res.render(join(__dirname, "./views/type.pug"), { type });
+      res.render(join(dirname(__dirname), "./views/type.pug"), { type });
     } else {
       res.status(404).send("Ce Type n'existe pas");
     }
