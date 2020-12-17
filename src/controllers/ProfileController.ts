@@ -4,6 +4,7 @@ import {
   ContextType,
   Controller,
   Ctx,
+  Param,
   Delete,
   Get,
   HttpResponse,
@@ -38,8 +39,14 @@ export class ProfileController {
   }
 
   @Delete("/:id", { description: "Not implemented" })
-  async deleteProfile() {
-    throw new Error("End point not implemented");
+  @Authorized()
+  async deleteProfile(
+    @Ctx { res }: ContextType,
+    @Param("id") profileId: string
+  ) {
+    const { famillyId } = res.locals.user;
+    const data = await this.profileService.deleteProfile(profileId, famillyId);
+    return { code: 200, data: data };
   }
 
   @Get("/:id", { description: "Not implemented" })
