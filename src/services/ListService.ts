@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { Service } from "../../lib";
 import List, { ListInput, IList } from "../entity/List";
+import ListType from "../entity/ListType";
 import { ITask, TaskInput } from "../entity/Task";
 
 @Service()
@@ -86,5 +87,9 @@ export class ListService {
       },
       { new: true }
     );
+  }
+
+  async getListTypes() {
+    return await ListType.find();
   }
 }

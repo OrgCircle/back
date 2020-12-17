@@ -8,7 +8,6 @@ export function AuthorizedFunction(
   return async (req, res, next) => {
     if (options.auth === undefined) return next();
     const isAuth = await options.auth(authorized, { req, res });
-
     if (isAuth) {
       return next();
     } else {

@@ -12,12 +12,19 @@ import {
   Patch,
 } from "../../lib";
 import { IList, ListInput, ListObject } from "../entity/List";
+import { IListType } from "../entity/ListType";
 import { TaskInput } from "../entity/Task";
 import { ListService } from "../services/ListService";
 
 @Controller("/lists")
 export class ListController {
   constructor(private listService: ListService) {}
+
+  @Get("/types", { description: "Get list types" })
+  async getListTypes(): HttpResponse<IListType[]> {
+    const data = await this.listService.getListTypes();
+    return { code: 200, data };
+  }
 
   @Get("/", { description: "Return all lists in database" })
   @Authorized()

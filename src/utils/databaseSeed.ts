@@ -3,6 +3,7 @@ import { hashPassword } from "../helpers/password";
 // import Profile from "../entity/Profile";
 import List from "../entity/List";
 import Event from "../entity/Event";
+import ListType from "../entity/ListType";
 
 export async function seedDatabase() {
   // Create familly
@@ -60,6 +61,16 @@ export async function seedDatabase() {
 
   await list.save();
   await list2.save();
+
+  await ListType.create({
+    icon: "✓",
+    label: "Chores",
+  });
+
+  await ListType.create({
+    icon: "🛒",
+    label: "Shopping",
+  });
 
   await Event.create({
     name: "Aller chez Tom",
