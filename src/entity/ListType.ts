@@ -10,7 +10,7 @@ export interface IListType extends Document {
 export const ListTypeSchema: Schema = new Schema<IListType>(
   {
     label: { type: String, required: true, unique: true },
-    icon: { type: Array, required: true },
+    icon: { type: String, required: true },
   },
   { timestamps: false }
 );
