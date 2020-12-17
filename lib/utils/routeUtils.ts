@@ -31,6 +31,7 @@ export const generateRoutes = (router: Router, options?: BuildApiOptions) => {
         { bodyParam, contextParam, paramsURLParam, queryURLParam },
         route
       );
+      console.log(route.method, url, authMiddleware ?? []);
 
       switch (route.method) {
         case "GET":

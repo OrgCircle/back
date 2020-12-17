@@ -12,6 +12,7 @@ import {
   Patch,
 } from "../../lib";
 import { IList, ListInput, ListObject } from "../entity/List";
+import ListType from "../entity/ListType";
 import { TaskInput } from "../entity/Task";
 import { ListService } from "../services/ListService";
 
@@ -25,6 +26,12 @@ export class ListController {
     const { famillyId } = res.locals.user;
     const lists = await this.listService.getAllLists(famillyId);
     return { code: 200, data: lists };
+  }
+
+  @Get("/types", { description: "Get list types" })
+  async getListTypes(): HttpResponse<any> {
+    const data = await ListType.find().exec();
+    return { code: 200, data };
   }
 
   @Get("/:id", { description: "Return the list matching the id" })
