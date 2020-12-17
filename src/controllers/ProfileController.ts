@@ -44,8 +44,12 @@ export class ProfileController {
     @Ctx { res }: ContextType,
     @Param("id") profileId: string
   ) {
-    const { famillyId } = res.locals.user;
-    const data = await this.profileService.deleteProfile(profileId, famillyId);
+    const { famillyId, role } = res.locals.user;
+    const data = await this.profileService.deleteProfile(
+      profileId,
+      famillyId,
+      role
+    );
     return { code: 200, data: data };
   }
 

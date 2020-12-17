@@ -4,6 +4,7 @@ import { IProfile } from "../entity/Profile";
 import { ObjectId } from "mongodb";
 import { hashPassword } from "../helpers/password";
 import { ProfileInput } from "../inputs/ProfileInputs";
+import { HttpException } from "../../lib/types/HttpException";
 
 @Service()
 export class ProfileService {
@@ -18,7 +19,10 @@ export class ProfileService {
     return await familly.save();
   }
 
-  async deleteProfile(profileId: string, famillyId: string) {
+  async deleteProfile(profileId: string, famillyId: string, role: string) {
+    if (role !== "ADMIN") {
+      throw new HttpException(403, "Not authorized");
+    }
     return await Familly.findOneAndUpdate(
       { _id: famillyId, "profiles._id": profileId },
       {
