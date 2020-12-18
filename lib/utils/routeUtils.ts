@@ -31,7 +31,6 @@ export const generateRoutes = (router: Router, options?: BuildApiOptions) => {
         { bodyParam, contextParam, paramsURLParam, queryURLParam },
         route
       );
-      console.info(route.method, url);
 
       switch (route.method) {
         case "GET":

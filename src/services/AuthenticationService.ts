@@ -13,13 +13,20 @@ export class AuthenticationService {
       const familly = new Familly({
         name: registerInput.familyName,
         email: registerInput.email,
+
         profiles: [
-          { name: registerInput.username, password: registerInput.password },
+          {
+            name: registerInput.username,
+            password: registerInput.password,
+            role: "ADMIN",
+          },
         ],
       });
 
       return await familly.save();
     } catch (error) {
+      console.error(error);
+
       throw new Error("Familly creation failed");
     }
   }

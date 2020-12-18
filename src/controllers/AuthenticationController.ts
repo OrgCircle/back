@@ -15,10 +15,15 @@ import { AuthenticationService } from "../services/AuthenticationService";
 import { sign } from "jsonwebtoken";
 import { JWT_SECRET } from "../config/keys";
 import { JWTPayload } from "../helpers/jwt";
+import { ListService } from "../services/ListService";
+import { IListType } from "../entity/ListType";
 
 @Controller("/auth")
 export class AuthenticationController {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private listService: ListService
+  ) {}
 
   @Post("/login", { description: "Route to login a familly" })
   async login(
@@ -55,6 +60,19 @@ export class AuthenticationController {
       username,
       verifyPassword,
     });
+
+    const choresType: Partial<IListType> = { icon: "✓", label: "Chores" };
+    await this.listService.createList(
+      { name: "Chores", content: [], listType: choresType as IListType },
+      familly._id
+    );
+
+    const shoppingType: Partial<IListType> = { icon: "🛒", label: "Shopping" };
+    await this.listService.createList(
+      { name: "Shopping", content: [], listType: shoppingType as IListType },
+      familly._id
+    );
+
     const { _id, profiles } = familly;
     const profils = profiles.map((profile) => {
       profile.password = undefined;

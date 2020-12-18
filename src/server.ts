@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { BuildAPI } from "../lib";
-// import { seedDatabase } from "./utils/databaseSeed";
+import { seedDatabase } from "./utils/databaseSeed";
 import { connect } from "mongoose";
 import { controllers } from "./controllers";
 import cors from "cors";
@@ -12,8 +12,7 @@ const PORT = process.env.PORT || 5000;
 async function main() {
   try {
     console.info("Connecting to database...");
-    // const conn =
-    await connect(process.env.MONGO_URL, {
+    const conn = await connect(process.env.MONGO_URL, {
       user: process.env.MONGO_USER,
       pass: process.env.MONGO_PASS,
       useUnifiedTopology: true,
@@ -21,10 +20,10 @@ async function main() {
       useCreateIndex: true,
       useFindAndModify: false,
     });
-    // await conn.connection.db.dropDatabase();
+    await conn.connection.db.dropDatabase();
 
-    // console.info("Seeding database ...");
-    // await seedDatabase();
+    console.info("Seeding database ...");
+    await seedDatabase();
 
     const app = express();
 
